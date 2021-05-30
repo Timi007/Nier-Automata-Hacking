@@ -3,6 +3,8 @@
 A game based on the hacking mini game in Nier: Automata.  
 It's written in [Typescript](https://www.typescriptlang.org/) using [three.js](https://github.com/mrdoob/three.js).
 
+This game was a uni project of mine.
+
 ## Development
 
 If you want to build this game from the source, you need [npm](https://nodejs.org/en/).
