@@ -18,7 +18,7 @@ import { UiManager } from "./UiManager";
 import { LevelManager } from "./LevelManager";
 import { Renderer } from "./Renderer";
 import { Guard } from "./entities/Guard";
-import { MinionGeometry } from "./geometry/MinionGeometry";
+import { GuardGeometry } from "./geometry/GuardGeometry";
 import { EnemyCore } from "./entities/EnemyCore";
 import Stats from 'three/examples/jsm/libs/stats.module';
 import { DEBUG } from "./Globals";
@@ -248,7 +248,7 @@ export class Game {
     public createGuard(): Guard {
         let audio = this.audioProvider.requestAudio(...Guard.NeededAudio);
 
-        let geometry = new MinionGeometry();
+        let geometry = new GuardGeometry();
         let material = new THREE.MeshPhongMaterial({ color: 'grey' });
         let guardMesh = new THREE.Mesh(geometry, material);
         guardMesh.receiveShadow = true;

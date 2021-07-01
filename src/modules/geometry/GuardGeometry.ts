@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-export class MinionGeometry extends THREE.BufferGeometry {
+export class GuardGeometry extends THREE.BufferGeometry {
     public constructor(height: number = 1) {
         super();
 
