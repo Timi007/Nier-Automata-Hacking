@@ -22,6 +22,8 @@ import { GuardGeometry } from "./geometry/GuardGeometry";
 import { EnemyCore } from "./entities/EnemyCore";
 import Stats from 'three/examples/jsm/libs/stats.module';
 import { DEBUG } from "./Globals";
+import { ShieldShaderMaterial } from "./shaders/ShieldShaderMaterial";
+import { Shield } from "./entities/Shield";
 
 const MAX_PLAYER_PROJECTILES = 50;
 const MAX_DESTRUCTIBLE_PROJECTILES = 100;
@@ -220,9 +222,10 @@ export class Game {
         enemyMesh.castShadow = true;
         enemyMesh.add(...audio.values());
 
-        let shield = this.createEnemyCoreShield(coreRadius + 0.2);
+        let shieldRadius = coreRadius + 0.25;
+        let shield = this.createEnemyCoreShield(shieldRadius);
 
-        let enemy = new EnemyCore(this, enemyMesh, shield, coreRadius + 0.2);
+        let enemy = new EnemyCore(this, enemyMesh, shield);
         enemy.addEventListener('death', this.onEnemyCoreDeath as EventListener);
         enemy.audioMap = audio;
 
@@ -231,10 +234,10 @@ export class Game {
 
     private createEnemyCoreShield(radius: number) {
         let geometry = new THREE.SphereGeometry(radius, 20, 20);
-        let material = new THREE.MeshBasicMaterial({ color: 'white', transparent: true, opacity: 0.25 });
-        let shield = new THREE.Mesh(geometry, material);
-        shield.receiveShadow = true;
-        shield.castShadow = true;
+        let material = new ShieldShaderMaterial();
+        let mesh = new THREE.Mesh(geometry, material);
+
+        let shield = new Shield(mesh, radius);
 
         return shield;
     }

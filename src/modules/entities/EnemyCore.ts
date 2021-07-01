@@ -5,6 +5,7 @@ import { Enemy, EnemyEvent } from "./Enemy";
 import { Guard } from "./Guard";
 import { PlayerProjectile } from "./projectile/PlayerProjectile";
 import { Projectile } from "./projectile/Projectile";
+import { Shield } from "./Shield";
 
 const DEFAULT_BOUNDING_RADIUS = 0.5;
 
@@ -18,9 +19,7 @@ export class EnemyCore extends Enemy {
     private _boundingSphere: THREE.Sphere;
 
     private readonly guards: Guard[] = [];
-    private readonly shield: THREE.Mesh;
-    private readonly shieldMaterial: THREE.Material;
-    private readonly shieldRadius: number;
+    private readonly shield: Shield;
 
     /**
      * Constructs an enemy core which behaves according to set combat and movement patterns.
@@ -29,18 +28,15 @@ export class EnemyCore extends Enemy {
      * @param shield The render component of the shield.
      * @param shieldRadius The shield radius.
      */
-    public constructor(game: Game, mesh: THREE.Mesh, shield: THREE.Mesh, shieldRadius: number) {
+    public constructor(game: Game, mesh: THREE.Mesh, shield: Shield) {
         super(game, mesh);
 
         this.shield = shield;
-        this.shieldRadius = shieldRadius;
-
-        this.mesh.add(this.shield);
-        this.shieldMaterial = this.shield.material as THREE.Material;
+        this.mesh.add(this.shield.mesh);
 
         this._health = 10;
 
-        this.shield.visible = false;
+        this.shield.active = false;
         this._boundingRadius = DEFAULT_BOUNDING_RADIUS;
         this._boundingSphere = new THREE.Sphere(this.position.clone(), this.boundingRadius);
 
@@ -57,32 +53,26 @@ export class EnemyCore extends Enemy {
 
     public update(time: GameTime) {
         this.handleHitEffect(time, 0xffffff);
-        this.updateShieldFade(time);
+        this.shield.update(time);
 
         super.update(time);
     }
 
     private enableShield() {
-        this.shield.visible = true;
-        this._boundingRadius = this.shieldRadius;
+        this.shield.active = true;
+        this._boundingRadius = this.shield.boundingRadius;
         this._boundingSphere.radius = this._boundingRadius;
     }
 
     private disableShield() {
-        this.shield.visible = false;
+        this.shield.active = false;
         this._boundingRadius = DEFAULT_BOUNDING_RADIUS;
         this._boundingSphere.radius = this._boundingRadius;
     }
 
-    private updateShieldFade(time: GameTime) {
-        if (this.shield.visible) {
-            this.shieldMaterial.opacity = 0.15 * Math.sin(time.totalElapsed / 400) + 0.5;
-        }
-    }
-
     public onHit(source: Projectile) {
         if (source instanceof PlayerProjectile && this._health > 0) {
-            if (this.shield.visible) {
+            if (this.shield.active) {
                 // Take no damage, shield is protecting us
                 this.playAudio('EnemyHitShield');
                 return;
