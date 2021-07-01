@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { Entity } from "../base/Entity";
 import { EnemyProjectile } from "./EnemyProjectile";
+import { Projectile } from "./Projectile";
 
 const PROJECTILE_SPEED: number = 0.015;
 
@@ -14,5 +15,9 @@ export class DestructibleProjectile extends EnemyProjectile {
      */
     public constructor(instigator: Entity, position: THREE.Vector3, direction: THREE.Vector3) {
         super(instigator, position, direction, PROJECTILE_SPEED);
+    }
+
+    public onHit(source: Projectile) {
+        this.manager?.remove(this);
     }
 }

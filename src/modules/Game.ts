@@ -344,14 +344,15 @@ export class Game {
             let hittableEntities: Entity[] = [];
             switch (projectileType) {
                 case DestructibleProjectile.name:
-                    let playerProjectileManager = this.managerMap[PlayerProjectile.name];
-                    hittableEntities.push(this.player, ...playerProjectileManager.entities);
+                    hittableEntities.push(this.player);
                     break;
                 case IndestructibleProjectile.name:
                     hittableEntities.push(this.player);
                     break;
+                case PlayerProjectile.name:
+                    hittableEntities.push(...this.entityManager.entities, ...this.managerMap[DestructibleProjectile.name].entities);
+                    break;
                 default:
-                    hittableEntities.push(...this.entityManager.entities);
                     break;
             }
 
