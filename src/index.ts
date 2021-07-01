@@ -10,6 +10,7 @@ import { UiManager } from './modules/UiManager';
 const uiManager = new UiManager();
 const audioProvider = new AudioProvider();
 
+// Start loading audio
 let loadAudioTask = audioProvider.loadGameAudioAsync();
 
 audioProvider.loadUiAudioAsync().then(() => {
